@@ -1,0 +1,15 @@
+{
+    "builders": [{
+      "type": "amazon-ebs",
+      "region": "us-east-2",
+      "source_ami": "ami-0a04068a95e6a1cde",
+      "instance_type": "t2.small",
+      "ssh_username": "ec2-user",
+      "ami_name": "nuance-pdf-{{timestamp}}"
+    }],
+    "provisioners": [{
+      "type": "shell",
+      "script": "install-nuance-pdf.sh"
+    }]
+  }
+  

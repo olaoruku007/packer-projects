@@ -1,0 +1,31 @@
+{
+    "builders": [{
+      "type": "amazon-ebs",
+      "region": "us-east-2",
+      "source_ami_filter": {
+        "filters": {
+          "virtualization-type": "hvm",
+          "name": "ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64-server-*",
+          "root-device-type": "ebs"
+        },
+        "owners": ["099720109477"],
+        "most_recent": true
+      },
+      "instance_type": "t2.small",
+      "ssh_username": "ubuntu",
+      "ami_name": "docker-ami-{{timestamp}}"
+    }],
+    "provisioners": [{
+      "type": "shell",
+      "inline": [
+        "sudo apt-get clean",
+        "sudo rm -rf /var/lib/apt/lists/*",
+        "sudo DEBIAN_FRONTEND=noninteractive apt-get update -yq",
+        "sudo DEBIAN_FRONTEND=noninteractive apt-get install -yq docker.io",
+        "sudo systemctl start docker",
+        "sudo systemctl enable docker",
+        "sudo usermod -aG docker $USER"
+      ]
+    }]
+  }
+  
