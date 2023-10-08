@@ -1,0 +1,43 @@
+---
+- hosts: all
+  #connection: local
+  become: yes
+  tasks:
+    - name: Add OpenJDK PPA
+      apt_repository:
+        repo: ppa:openjdk-r/ppa
+        state: present
+
+    - name: Update and upgrade apt packages
+      apt:
+        upgrade: dist
+        update_cache: yes
+
+    - name: Install OpenJDK 17
+      apt:
+        name: openjdk-17-jdk
+        state: present
+
+    - name: Ensure sources.list is correct
+      copy:
+        src: files/sources.list
+        dest: /etc/apt/sources.list
+        owner: root
+        group: root
+        mode: '0644'
+
+
+    - name: Add Jenkins repository key
+      apt_key:
+        url: https://pkg.jenkins.io/debian/jenkins.io.key
+        state: present
+
+    - name: Add Jenkins repository
+      apt_repository:
+        repo: "deb http://pkg.jenkins.io/debian-stable binary/"
+        state: present
+
+    - name: Install Jenkins
+      apt:
+        name: jenkins
+        state: present
